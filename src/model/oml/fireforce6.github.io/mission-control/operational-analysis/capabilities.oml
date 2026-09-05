@@ -45,4 +45,9 @@ description <https://fireforce6.github.io/mission-control/operational-analysis/c
         base:description "Integrate Fire Cloud telemetry for environment and drone data."
         mission:isRequiredBy objectives:O2
     ]
+
+    instance C9 : mission:Capability [
+        base:description "Detect fire signatures with quantified accuracy against ground-truth multi-spectral data."
+        mission:isRequiredBy objectives:O2
+    ]
 }

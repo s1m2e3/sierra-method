@@ -70,4 +70,45 @@ description <https://fireforce6.github.io/mission-control/system-analysis/connec
         component:transfers TelemetrySignal
     ]
 
+    ref instance components:DetectionMicrocomputer [
+        component:hasPort DetectionMicrocomputer.Data_In
+        component:hasPort DetectionMicrocomputer.Data_Out
+    ]
+
+    instance DetectionMicrocomputer.Data_In : component:Port [ component:direction "In" ]
+    instance DetectionMicrocomputer.Data_Out : component:Port [ component:direction "Out" ]
+    
+
+    instance SpectralImagery : component:Signal []
+    instance Prediction : component:Signal []
+
+    ref instance components:MultiSpectralSensor [
+        component:hasPort MultiSpectralSensor.Data_Out
+    ]
+
+    instance MultiSpectralSensor.Data_Out : component:Port [ component:direction "Out" ]
+
+    relation instance Conn_MultiSpectralSensor_to_DetectionMicrocomputer : component:Connection [
+        from MultiSpectralSensor.Data_Out
+        to DetectionMicrocomputer.Data_In
+        component:transfers SpectralImagery
+    ]
+
+    relation instance Conn_DetectionMicrocomputer_to_MultiSpectralDetectionUnit : component:Connection [
+        from DetectionMicrocomputer.Data_Out
+        to MultiSpectralDetectionUnit.Data_Out
+        component:transfers Prediction
+    ]
+
+    instance MultiSpectralDetectionUnit.Data_Out : component:Port [ component:direction "Out" ]
+    
+    ref instance components:MultiSpectralDetectionUnit [
+        component:hasPort MultiSpectralDetectionUnit.Data_Out
+    ]
+
+    relation instance Conn_MultiSpectralDetectionUnit_to_Payload : component:Connection [
+        from MultiSpectralDetectionUnit.Data_Out
+        to Payload.Data_Out
+        component:transfers Prediction
+    ]
 }

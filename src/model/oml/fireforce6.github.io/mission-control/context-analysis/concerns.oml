@@ -46,4 +46,15 @@ description <https://fireforce6.github.io/mission-control/context-analysis/conce
         base:priority "High"
         base:category "Need"
     ]
+
+    @rdfs:label "Detection Unit Needs"
+    instance DetectionUnitNeeds : stakeholder:Concern [
+        base:description "Integration with fire Cloud and reliability in detection."
+        stakeholder:isExpressedBy stakeholders:SystemsEngineer
+        base:category "Need"
+        base:priority "High"
+    ]
+
+    
+
 }

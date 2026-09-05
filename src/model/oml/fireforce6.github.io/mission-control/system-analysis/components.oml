@@ -883,7 +883,33 @@ description <https://fireforce6.github.io/mission-control/system-analysis/compon
         base:isContainedBy GPSReceiver
     ]
 
+    instance MultiSpectralDetectionUnit : component:Component [
+        base:description "Multi-Spectral Detection Unit"
+        base:isContainedBy Payload
+    ]
+    
+    instance DetectionCasing : component:Component [
+        base:description "Casing for Multi-Spectral Detection Unit"
+        base:isContainedBy MultiSpectralDetectionUnit
+    ]
+
+    instance MultiSpectralSensor : component:Component [
+        base:description "Multi-Spectral Image Sensor"
+        base:isContainedBy MultiSpectralDetectionUnit
+    ]
+
+    instance DetectionMicrocomputer : component:Component [
+        base:description "Microcomputer for Multi-Spectral Detection Unit"
+        base:isContainedBy MultiSpectralDetectionUnit
+    ]
+
+    instance DetectionAlgorithm : component:Component [
+        base:description "Algorithm for Multi-Spectral Detection"
+        base:isContainedBy DetectionMicrocomputer
+    ]
+
     instance FireSat : component:Component [
         base:description "FireSat Spacecraft"
     ]
+
 }

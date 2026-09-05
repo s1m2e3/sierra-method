@@ -61,4 +61,20 @@ description <https://fireforce6.github.io/mission-control/operational-analysis/r
         base:category "L2"
         base:priority "Medium"
     ]
+
+    instance R8 : stakeholder:Requirement [
+        base:description "Detection unit compatibility"
+        base:expression "The detection unit system shall be compatible with the existing Fire Cloud infrastructure."
+        stakeholder:isStatedBy stakeholders:SystemsEngineer
+        base:category "L1"
+        base:priority "High"
+    ]
+
+    instance R9 : stakeholder:Requirement [
+        base:description "Accuracy of detection unit"
+        base:expression "The detection unit shall have an accuracy of at least 80% with respect to the samples of the last month."
+        stakeholder:isStatedBy stakeholders:CommandCenter
+        base:category "L1"
+        base:priority "High"
+    ]
 }
