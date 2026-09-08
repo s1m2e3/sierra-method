@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "oml": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@oml/mcp"
+      ]
+    }
+  }
+}
+
