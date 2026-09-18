@@ -5,6 +5,7 @@ description <https://fireforce6.github.io/mission-control/system-analysis/ports#
     extends <https://fireforce6.github.io/mission-control/system-analysis/components#> as components
     extends <https://fireforce6.github.io/mission-control/operational-analysis/items#> as items
     uses <https://www.modelware.io/sierra/component#> as component
+    extends <https://fireforce6.github.io/mission-control/system-analysis/connections#> as connections
 
     instance VisualCamera.Data_Out : component:Port [
         component:portOf components:VisualCamera
@@ -19,5 +20,10 @@ description <https://fireforce6.github.io/mission-control/system-analysis/ports#
     instance ThermalSensor.Data_Out : component:Port [
         component:portOf components:ThermalSensor
         component:direction "Out"
+    ]
+
+    relation instance Connection1 : component:Connection [
+        from VisualCamera.Data_Out
+        to connections:Payload.Data_Out
     ]
 }
