@@ -1,0 +1,23 @@
+@dc:title "System Ports"
+@dc:description "Description of component ports for the Mission Control system."
+description <https://fireforce6.github.io/mission-control/system-analysis/ports#> as ports {
+    uses <http://purl.org/dc/elements/1.1/> as dc
+    extends <https://fireforce6.github.io/mission-control/system-analysis/components#> as components
+    extends <https://fireforce6.github.io/mission-control/operational-analysis/items#> as items
+    uses <https://www.modelware.io/sierra/component#> as component
+
+    instance VisualCamera.Data_Out : component:Port [
+        component:portOf components:VisualCamera
+        component:direction "Out"
+    ]
+
+    instance VisualCamera.Power_In : component:Port [
+        component:portOf components:VisualCamera
+        component:direction "In"
+    ]
+
+    instance ThermalSensor.Data_Out : component:Port [
+        component:portOf components:ThermalSensor
+        component:direction "Out"
+    ]
+}
