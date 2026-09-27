@@ -22,8 +22,4 @@ description <https://fireforce6.github.io/mission-control/system-analysis/ports#
         component:direction "Out"
     ]
 
-    relation instance Connection1 : component:Connection [
-        from VisualCamera.Data_Out
-        to connections:Payload.Data_Out
-    ]
 }
