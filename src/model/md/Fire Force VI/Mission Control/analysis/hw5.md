@@ -245,3 +245,81 @@ WHERE {
 ```
 
 **Answer:**The first graph illustrates the traceability from outcomes to capabilities and the entities providing those. The second view provides a graph that shows the broken chains. In this case capability 9 is missing an entity that provides it. By counter, every other capability has a direct entity providing the needed capabilities. 
+
+## Computed Analysis
+
+**Question:** How robust is capability coverage: which capabilities have no
+provider, which depend on a single entity, and which are redundant?
+
+**Why it matters:** A capability with one provider is a single point of failure.
+If that entity fails, the capability is lost. Coverage alone (Section 4) says
+*whether* a capability is provided; this analysis says *how safely*.
+
+```python
+include('src/method/py/utils.py')
+import micropip
+await micropip.install(['matplotlib'])
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+# ---------- 1. QUERY ----------
+result = await query("""
+  PREFIX mission: <https://www.modelware.io/sierra/mission#>
+  PREFIX entity:  <https://www.modelware.io/sierra/entity#>
+  SELECT DISTINCT ?capability ?entity
+  WHERE {
+    ?capability a mission:Capability .
+    OPTIONAL { ?entity entity:hasCapability|^entity:isAssignedTo ?capability . }
+  }
+""")
+
+# ---------- 2. COMPUTE ----------
+# group rows into {capability: set of providers}
+providers = {}
+for r in result['rows']:
+    cap = frag(r.get('capability'))
+    providers.setdefault(cap, set())
+    if r.get('entity'):
+        providers[cap].add(frag(r['entity']))
+
+caps   = sorted(providers, key=lambda c: int(c[1:]) if c[1:].isdigit() else 0)
+counts = [len(providers[c]) for c in caps]
+
+uncovered = [c for c in caps if len(providers[c]) == 0]
+single    = [c for c in caps if len(providers[c]) == 1]
+redundant = [c for c in caps if len(providers[c]) >= 2]
+coverage  = 100 * (len(caps) - len(uncovered)) / len(caps)
+
+single_txt = ', '.join(c + ' (' + next(iter(providers[c])) + ')' for c in single) or 'none'
+
+display(
+    f"<b>Coverage:</b> {coverage:.0f}% of capabilities have at least one provider<br>"
+    f"<b>Uncovered:</b> {', '.join(uncovered) or 'none'}<br>"
+    f"<b>Single point of failure:</b> {single_txt}<br>"
+    f"<b>Redundant (2+ providers):</b> {', '.join(redundant) or 'none'}"
+)
+
+# ---------- 3. RENDER ----------
+colors = ['tomato' if n == 0 else 'gold' if n == 1 else 'mediumseagreen' for n in counts]
+fig, ax = plt.subplots(figsize=(7, 3.5))
+ax.bar(caps, counts, color=colors)
+ax.axhline(1.5, color='grey', linestyle='--', linewidth=1)
+ax.set_ylabel('Providing entities')
+ax.set_title('Capability robustness (red = none, yellow = single, green = redundant)', fontsize=10)
+ax.set_yticks(range(0, max(counts) + 2))
+plt.tight_layout()
+display(image_html(fig))
+```
+
+**Answer:** In this case one can use an heuristic of counting how many entities are providing the capability. This can highlight the robustness of the system with respect to one of the entities failing at the moment of providing the capability.
+
+
+## Reusable Template
+
+
+```compose
+template: https://www.modelware.io/sierra/system-analysis/port-wiring
+component: https://fireforce6.github.io/mission-control/system-analysis/components#PropulsionSegment
+```
+The other import can be seen in Wiring.md in this same directory.
