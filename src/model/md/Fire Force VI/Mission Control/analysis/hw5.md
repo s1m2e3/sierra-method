@@ -323,3 +323,41 @@ template: https://www.modelware.io/sierra/system-analysis/port-wiring
 component: https://fireforce6.github.io/mission-control/system-analysis/components#PropulsionSegment
 ```
 The other import can be seen in Wiring.md in this same directory.
+
+## Dashboard
+
+**Question:** For each mission objective, are all the capabilities it requires
+provided by at least one entity? Which objectives are at risk, and why?
+
+```table
+PREFIX mission: <https://www.modelware.io/sierra/mission#>
+PREFIX entity:  <https://www.modelware.io/sierra/entity#>
+
+SELECT ?objective
+       (COUNT(DISTINCT ?cap)        AS ?required)
+       (COUNT(DISTINCT ?coveredCap) AS ?provided)
+       (GROUP_CONCAT(DISTINCT ?gapName; separator=", ") AS ?missing)
+       (IF(COUNT(DISTINCT ?cap) = 0, "no capability",
+          IF(COUNT(DISTINCT ?coveredCap) = COUNT(DISTINCT ?cap),
+             "deliverable", "at risk")) AS ?status)
+WHERE {
+  # 1. every objective, even ones that require nothing
+  ?objective a mission:Objective .
+
+  OPTIONAL {
+    # 2. the capabilities it requires
+    ?objective mission:requires|^mission:isRequiredBy ?cap .
+
+    # 3. is some entity providing that capability?
+    BIND(EXISTS { ?e entity:hasCapability|^entity:isAssignedTo ?cap } AS ?isCovered)
+
+    # 4. sort each capability into "covered" or "gap"
+    BIND(IF(?isCovered, ?cap, ?none) AS ?coveredCap)
+    BIND(IF(!?isCovered, STRAFTER(STR(?cap), "#"), ?none) AS ?gapName)
+  }
+}
+GROUP BY ?objective
+ORDER BY DESC(?status) ?objective
+```
+
+**Interpretation:** Using the proxy of requiring one entity per capability for assessing which outcome may be in risk From the result of the table one can note that O2 is at risk. This means that the mission promises O2 but nothing in the architecture can actually deliver it, since C9 has no entity providing it, and even so the model passes lint, reason and validate. The fix is to assign C9 to an entity (AIFireWarden is the natural owner, since detecting fire signatures is part of monitoring) and rerun this table to confirm that O2 turns deliverable.
