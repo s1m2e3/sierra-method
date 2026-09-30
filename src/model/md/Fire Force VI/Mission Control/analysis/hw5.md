@@ -360,4 +360,4 @@ GROUP BY ?objective
 ORDER BY DESC(?status) ?objective
 ```
 
-**Interpretation:** Using the proxy of requiring one entity per capability for assessing which outcome may be in risk From the result of the table one can note that O2 is at risk. This means that the mission promises O2 but nothing in the architecture can actually deliver it, since C9 has no entity providing it, and even so the model passes lint, reason and validate. The fix is to assign C9 to an entity (AIFireWarden is the natural owner, since detecting fire signatures is part of monitoring) and rerun this table to confirm that O2 turns deliverable.
+**Interpretation:** Using the proxy of requiring one entity per capability for assessing which outcome may be in risk From the result of the table one can note that O2 is at risk while the other capabilities are being provided by at least one entity. This is a relevant fact because as-is the model passes lint, reason and validate.
