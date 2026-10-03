@@ -111,4 +111,10 @@ description <https://fireforce6.github.io/mission-control/system-analysis/connec
         to Payload.Data_Out
         component:transfers Prediction
     ]
+
+    relation instance Conn_FireSatCmd_to_Propulsion : component:Connection [
+        from FireSat.Command_In
+        to Propulsion.Command_In
+        component:transfers CommandSignal
+    ]
 }

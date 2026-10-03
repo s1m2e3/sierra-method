@@ -30,6 +30,7 @@ description <https://fireforce6.github.io/mission-control/operational-analysis/e
         base:description "Autonomous AI agent capable of monitoring and suggesting fire management actions."
         ent:hasCapability capabilities:C5
         ent:hasCapability capabilities:C6
+        ent:hasCapability capabilities:C9
     ]
 
     instance NetworkInterface : ent:Entity [
